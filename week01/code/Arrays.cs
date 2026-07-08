@@ -6,15 +6,27 @@ public static class Arrays
     /// integer greater than 0.
     /// </summary>
     /// <returns>array of doubles that are the multiples of the supplied number</returns>
+
     public static double[] MultiplesOf(double number, int length)
     {
-        // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Comments
+        // step 1: To solve this problem, We need first to remember about what is multiples of a number. A multiple of a number is the product of that number and an integer. 
+        // Knowing this, we need to create an array of doubles with the specified length.
+        //In this array we are going to store the multiples of the number.
 
-        return []; // replace this return statement with your own
+        var multiples= new double[length];
+        
+        //step 2: Then,we need a "for" loop to iterate through the array and calculate each multiple by multiplying the number by the index + 1 (to start from 1 instead of 0). 
+        // This process will continue until we reach the specified length. Finally, we will return the array containing the multiples of the number.
+
+        for (var i = 0; i < length; i++)
+        {
+            multiples[i] = number * (i + 1);
+        }
+
+        return multiples; // replace this return statement with your own
     }
+
 
     /// <summary>
     /// Rotate the 'data' to the right by the 'amount'.  For example, if the data is 
@@ -25,9 +37,22 @@ public static class Arrays
     /// </summary>
     public static void RotateListRight(List<int> data, int amount)
     {
-        // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        //the length of the list is needed to calculate the new index for each element after rotation
+        var length = data.Count;
+        // Step 1: Create a new list to hold the rotated values.        
+        var rotatedList = new List<int>(new int[length]);
+        // Step 2:Then we need iterate through the original list(data) and calculate the new index for each element
+        for (var i = 0; i < length; i++)
+        {
+            // Step 3: To calculate the new index we adding the amount to the current index and taking the modulus with the length of the list
+            //This module makes sure that the new index wraps around to the beginning of the list if it exceeds the length of the list.
+            var newIndex = (i + amount) % length;
+            // Step 4: Here we need to assign the value from the original list to the new index in the rotated list
+            rotatedList[newIndex] = data[i];
+        }
+        // Step 5: Finally, we need to clear the original list and add the rotated values back into it. This will modify the original list to reflect the rotation.
+        data.Clear();
+        data.AddRange(rotatedList);
     }
 }
+    
