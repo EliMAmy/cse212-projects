@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 public static class SetsAndMaps
 {
@@ -22,8 +23,38 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // Use a HashSet to store the words for O(1) lookups
+        var wordSet = new HashSet<string>(words);
+        // Use a HashSet to keep track of processed words to avoid duplicates in the result
+        var processed = new HashSet<string>();
+        // Use a list to store the resulting pairs
+        var result = new List<string>();
+        // Loop through each word in the input array
+        foreach (var word in words)
+        {
+            // Check if the first and second characters are the same, if so skip this word
+            if (word[0] == word[1]) 
+                continue;
+            // Check if the word has already been processed, if so skip this word
+            if (!processed.Add(word)) 
+                continue;
+            // the variable 'reversed' is used to store the reversed version of the current word, which is created by concatenating the second character and the first character of the word
+            var reversed = $"{word[1]}{word[0]}";
+            // here use the if statement to check if the reversed word is in the HashSet of words, if it is then we add the pair to the result list and mark both words as processed
+            if (wordSet.Contains(reversed))
+            {   
+                // we add the pair to the result list in the format "word & reversed"
+                result.Add($"{word} & {reversed}");
+                processed.Add(word);
+                processed.Add(reversed);
+
+            }
+        }
+        // Finally, we convert the result list to an array and return it 
+        return result.ToArray();
+
     }
+
 
     /// <summary>
     /// Read a census file and summarize the degrees (education)
@@ -38,11 +69,26 @@ public static class SetsAndMaps
     /// <returns>fixed array of divisors</returns>
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
+        // here we will use a dictionary to count the occurrences of each degree
         var degrees = new Dictionary<string, int>();
+        //then we will read the file line by line, split each line by commas, and extract the degree from the 4th column (index 3)
         foreach (var line in File.ReadLines(filename))
         {
+            // using the Split method to split the line by commas and get the degree from the 4th column (index 3)
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            // then we will trim the degree to remove any leading or trailing whitespace
+            var degree = fields[3].Trim();
+            // here we will check if the degree is already in the dictionary, if it is we will increment the count, if not we will add it to the dictionary with a count of 1
+            if (degrees.ContainsKey(degree))
+            {
+                // if the degree is already in the dictionary, we will increment the count in the dictionary by 1
+                degrees[degree]++;
+            }
+            else
+            {
+                // if the degree is not in the dictionary, we will add it to the dictionary with a count of 1
+                degrees[degree] = 1;
+            }
         }
 
         return degrees;
@@ -66,8 +112,39 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        //we need to remove spaces and convert to lower case to ignore spaces and cases
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+        //Then is important to check if the lengths of the two words are equal, if not they cannot be anagrams
+        if (word1.Length != word2.Length)
+            return false;
+        // using a dictionary to count the occurrences of each letter in word1, 
+        // using foreach loop to iterate through each letter in word1 and add it to the dictionary with a count of 1 if it is not already in the dictionary, or increment the count if it is already in the dictionary
+        var letterCount = new Dictionary<char, int>();
+        foreach (char letter in word1)
+        {                       
+            //this part checks if the letter is already in the dictionary, if it is we increment the count, if not we add it to the dictionary with a count of 1
+            if (letterCount.ContainsKey(letter))
+                letterCount[letter]++;
+            else
+                letterCount[letter] = 1;
+        }
+        // In this part we will iterate through each letter in word2 and check if it is in the dictionary, if it is we decrement the count, if not we return false.
+        foreach (char letter in word2)
+        {
+            // this part checks if the letter is in the dictionary, if it is we decrement the count, if not we return false
+            if (!letterCount.TryGetValue(letter, out int count))
+                return false;
+            //the count variable is used to keep track of the number of occurrences of each letter in word1
+            count--;
+            //if the count is less than 0, it means that word2 has more occurrences of that letter than word1, so we return false
+            if (count < 0)
+                return false;
+            //if the count is not less than 0, we update the count in the dictionary
+            letterCount[letter] = count;
+        }
+        // Finally, we check if all the counts in the dictionary are 0, if they are we return true, if not we return false
+        return letterCount.Values.All(v => v == 0);
     }
 
     /// <summary>

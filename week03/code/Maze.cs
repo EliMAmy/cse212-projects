@@ -32,7 +32,15 @@ public class Maze
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        // here we need to check if we can move left by checking the first element of the boolean array in the dictionary for the current position. 
+        bool[] directions = _mazeMap[(_currX, _currY)];
+        // if the first element is false, then we throw an InvalidOperationException with the message "Can't go that way!"
+        if (!directions[0])
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+        // if the first element is true, then we can move left by decrementing the current x position
+        _currX--;
     }
 
     /// <summary>
@@ -41,7 +49,15 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        // here we need to check if we can move right by checking the second element of the boolean array in the dictionary for the current position.
+        bool[] directions = _mazeMap[(_currX, _currY)];
+        // if the second element is false, then we throw an InvalidOperationException with the message "Can't go that way!"
+        if (!directions[1])
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+        // if the second element is true, then we can move right by incrementing the current x position
+        _currX++;
     }
 
     /// <summary>
@@ -50,7 +66,15 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        // here we need to check if we can move up by checking the third element of the boolean array in the dictionary for the current position.
+        bool[] directions = _mazeMap[(_currX, _currY)];
+        // if the third element is false, then we throw an InvalidOperationException with the message "Can't go that way!"
+        if (!directions[2])
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+        // if the third element is true, then we can move up by decrementing the current y position
+        _currY--;
     }
 
     /// <summary>
@@ -59,7 +83,15 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        // here we need to check if we can move down by checking the fourth element of the boolean array in the dictionary for the current position.
+        bool[] directions = _mazeMap[(_currX, _currY)];
+        // if the fourth element is false, then we throw an InvalidOperationException with the message "Can't go that way!"
+        if (!directions[3])
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+        // if the fourth element is true, then we can move down by incrementing the current y positionn
+        _currY++;
     }
 
     public string GetStatus()
