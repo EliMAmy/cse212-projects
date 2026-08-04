@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 public static class Recursion
 {
@@ -14,8 +15,17 @@ public static class Recursion
     /// </summary>
     public static int SumSquaresRecursive(int n)
     {
-        // TODO Start Problem 1
-        return 0;
+        // TODO Start Problem 1 
+        //First, we need to identify the base case. The base case is when n <= 0, in which case we return 0.
+        if (n <= 0)
+        {
+            return 0;
+        }
+        //if not, we return n^2 + the sum of squares of the previous number (n-1)
+        else
+        {
+            return (int)Math.Pow(n, 2) + SumSquaresRecursive(n - 1);
+        }       
     }
 
     /// <summary>
@@ -40,6 +50,23 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        // first, we need to identify the base case. The base case is when the length of the word is equal to the size, in which case we add the word to the results list and return.
+        if (word.Length == size)
+        {
+            results.Add(word);
+            return;
+        }
+        // if not, we need to iterate through the letters 
+        for (int i = 0; i < letters.Length; i++)
+        {
+            // Here we create a new word by adding the current letter to the word 
+            string newWord = word + letters[i];
+            // Here we create a new string of remaining letters by removing the current letter from the letters string
+            string remainingLetters = letters.Substring(0, i) + letters.Substring(i + 1);
+            // Here we make a recursive call to the function with the new word and remaining letters
+            PermutationsChoose(results, remainingLetters, size, newWord);
+        }
+
     }
 
     /// <summary>
@@ -86,7 +113,7 @@ public static class Recursion
     /// </summary>
     public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember = null)
     {
-        // Base Cases
+        // First we need to identify the base case. 
         if (s == 0)
             return 0;
         if (s == 1)
@@ -97,9 +124,22 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
+        // If the remember dictionary is null, we need to initialize it, we use remember to store the number of ways to climb the stairs for each value of s that we have already calculated, so that we don't have to recalculate it again.
+        if (remember == null)
+        {
+            remember = new Dictionary<int, decimal>();
+        }
+        // Check if the value has already been calculated and stored in the remember dictionary
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
 
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        // Here we calculate the number of ways to climb the stairs by summing the number of ways to climb the stairs from the previous three steps
+        decimal ways = CountWaysToClimb(s - 1, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 3, remember);
+        // Store the calculated value in the remember dictionary for future reference
+        remember[s] = ways;
+        // Return the calculated value
         return ways;
     }
 
@@ -119,6 +159,28 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        // First, we need to identify the base case. 
+        //
+        if (pattern.IndexOf('*') == -1)
+        {
+            results.Add(pattern);
+            return;
+        }
+        // If not, we need to find the index of the first * in the pattern and replace it with 0 and 1
+        else
+        {
+            // Find the index of the first * in the pattern
+            int index = pattern.IndexOf('*');
+            // Create two new patterns, one with 0 and one with 1
+            string patternWithZero = pattern.Substring(0, index) + "0" + pattern.Substring(index + 1);
+            // Create two new patterns, one with 0 and one with 1
+            string patternWithOne = pattern.Substring(0, index) + "1" + pattern.Substring(index + 1);
+            // Make recursive calls to the function with the new patterns
+            WildcardBinary(patternWithZero, results);
+            // Make recursive calls to the function with the new patterns
+            WildcardBinary(patternWithOne, results);
+        }
+
     }
 
     /// <summary>
@@ -136,7 +198,14 @@ public static class Recursion
         // currPath.Add((1,2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
-        // ADD CODE HERE
+        currPath.Add((x, y)) ;
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+            currPath.RemoveAt(currPath.Count -1);
+            return;
+        }
+
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
